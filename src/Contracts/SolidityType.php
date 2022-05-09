@@ -305,7 +305,7 @@ class SolidityType
             return $result;
         } elseif ($this->isDynamicType()) {
 			
-			if($name=='bytes' || $name=='string')
+			if($name=='bytes' || $name=='string' && $offset>0)
 			{
 				$mC 	= (int) Utils::toBn('0x' . mb_substr($value, $offset, 64))->toString();
 				$mCC 	= (floor($mC/32)+1)*64;
