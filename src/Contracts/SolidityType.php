@@ -199,13 +199,15 @@ class SolidityType
      */
     public function encode($value, $name)
     {	
+		
         if ($this->isDynamicArray($name)) {
             $length = count($value);
+
             $nestedName = $this->nestedName($name);
             $result = [];
             $result[] = IntegerFormatter::format($length);
 			//解决 encode 
-	
+
             if ($this->isDynamicType($nestedName)){
                 $start = 0;
                 foreach ($value as $k => $val) {
@@ -213,13 +215,16 @@ class SolidityType
                         $l = $length * 32;
                     }else{
                         $v_1 = Utils::toHex($value[$k-1]);
-                        $l = (floor((mb_strlen($v_1) + 63) / 64)+1) * 32;
+                        $l = (floor((mb_strlen($v_1) + 63) / 64)+1)==2?((floor((mb_strlen($v_1) + 63) / 64)+1) * 32):((floor((mb_strlen($v_1) + 63) / 64)) * 32);
+						
                     }
+				
                     $start += $l;
+			
                     $result[] = IntegerFormatter::format($start);
                 }
             }
-
+		
             foreach ($value as $val) {
                 $result[] = $this->encode($val, $nestedName);
             }
